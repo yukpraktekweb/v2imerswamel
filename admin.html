@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>iMersWAMEL v2 - Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; color: #0f172a; }
+    .glass-card { background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); border: 1px solid #e2e8f0; border-radius: 1.5rem; padding: 2rem; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05); }
+    .nav-item { padding: 1rem 1.5rem; border-radius: 1rem; font-weight: 600; color: #64748b; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 0.75rem; }
+    .nav-item:hover, .nav-item.active { background: #d1fae5; color: #059669; }
+    .btn-primary { background: #10b981; color: white; padding: 0.75rem 2rem; border-radius: 1rem; font-weight: 700; transition: all 0.3s; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); }
+    .btn-primary:hover { transform: translateY(-2px); background: #059669; }
+    .tab-content { display: none; animation: fadeIn 0.5s ease; }
+    .tab-content.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+  
+  <!-- Sidebar -->
+  <aside class="w-72 bg-white border-r border-slate-200 flex flex-col p-6 z-20 shadow-xl">
+    <div class="flex items-center gap-4 mb-12">
+      <div class="w-12 h-12 bg-emerald-500 rounded-xl flex items-center justify-center text-white shadow-lg"><i data-lucide="zap"></i></div>
+      <h1 class="text-2xl font-extrabold tracking-tight text-slate-800">iMers<span class="text-emerald-500">V2</span></h1>
+    </div>
+    
+    <nav class="flex-1 space-y-2">
+      <div onclick="switchTab('dashboard')" class="nav-item active" id="nav-dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</div>
+      <div onclick="switchTab('sequences')" class="nav-item" id="nav-sequences"><i data-lucide="git-merge"></i> Auto Sequences</div>
+      <div onclick="switchTab('broadcast')" class="nav-item" id="nav-broadcast"><i data-lucide="radio"></i> Broadcasts</div>
+      <div onclick="switchTab('subscribers')" class="nav-item" id="nav-subscribers"><i data-lucide="users"></i> Subscribers</div>
+      <div onclick="switchTab('settings')" class="nav-item" id="nav-settings"><i data-lucide="settings"></i> Settings</div>
+    </nav>
+
+    <div class="mt-auto pt-6 border-t border-slate-100 text-xs font-bold text-slate-400 text-center uppercase tracking-widest">
+      SaaS Engine v2.0
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 overflow-y-auto bg-slate-50 p-10 relative">
+    
+    <!-- Dashboard Tab -->
+    <section id="tab-dashboard" class="tab-content active">
+      <h2 class="text-3xl font-black mb-8 text-slate-800">Overview Panel</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
+        <div class="glass-card">
+          <div class="text-slate-400 font-bold uppercase tracking-wider text-xs mb-2">Total Subscribers</div>
+          <div class="text-5xl font-black text-emerald-600">--</div>
+        </div>
+        <div class="glass-card">
+          <div class="text-slate-400 font-bold uppercase tracking-wider text-xs mb-2">Active Sequences</div>
+          <div class="text-5xl font-black text-indigo-600">--</div>
+        </div>
+        <div class="glass-card">
+          <div class="text-slate-400 font-bold uppercase tracking-wider text-xs mb-2">Messages Sent (WA)</div>
+          <div class="text-5xl font-black text-blue-600">--</div>
+        </div>
+      </div>
+      <div class="glass-card">
+        <h3 class="font-bold text-slate-700 mb-4 flex items-center gap-2"><i data-lucide="shield-alert" class="w-5 h-5 text-amber-500"></i> Setup Assistant</h3>
+        <p class="text-sm text-slate-600 mb-4">Pastikan Anda telah menjalankan <code>setupDatabaseV2()</code> dan memasang Triggers di Apps Script untuk menjalankan <code>runAutomationScheduler</code> setiap 5 menit.</p>
+        <button onclick="google.script.run.setupDatabaseV2(); alert('Database setup triggered!')" class="btn-primary flex items-center gap-2"><i data-lucide="database"></i> Install DB / Repair Tables</button>
+      </div>
+    </section>
+
+    <!-- Sequences Tab -->
+    <section id="tab-sequences" class="tab-content">
+      <div class="flex justify-between items-center mb-8">
+        <h2 class="text-3xl font-black text-slate-800">Automation Sequences</h2>
+        <button class="btn-primary">+ New Sequence</button>
+      </div>
+      <div class="glass-card">
+        <p class="text-slate-500 italic">Data sequence sekarang diatur melalui file Spreadsheet "AutomationSequence". Pengaturan UI sedang dalam pengembangan bertahap.</p>
+      </div>
+    </section>
+    
+    <!-- Subscribers Tab -->
+    <section id="tab-subscribers" class="tab-content">
+      <h2 class="text-3xl font-black mb-8 text-slate-800">Subscriber Management</h2>
+      <div class="glass-card overflow-hidden">
+        <p class="text-slate-500 italic">Buka tab "Subscribers" di Spreadsheet untuk melihat log pendaftar secara real-time.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    lucide.createIcons();
+    
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+      
+      document.getElementById('tab-' + tabId).classList.add('active');
+      document.getElementById('nav-' + tabId).classList.add('active');
+    }
+  </script>
+</body>
+</html>
